@@ -20,10 +20,10 @@ socket.on('connect', function () {
     console.log('Connected to server');
     var params = $.deparam(window.location.search);
     socket.emit('join', params, function (err) {
-        if (err){
+        if (err) {
             alert(err);
             window.location.href = '/';
-        }else{
+        } else {
             console.log('no err')
         }
     });
@@ -32,6 +32,16 @@ socket.on('connect', function () {
 socket.on('disconnect', function () {
     console.log('Disconnected from server');
 });
+
+socket.on('updateUserList', function (users) {
+    var ol = $('<ol></ol>');
+    users.forEach(function (user) {
+        ol.append($('<li></li>').text(user))
+    });
+
+    $('#users').html(ol);
+    console.log('Users List', users);
+})
 
 socket.on('newMessage', function (message) {
     var formattedTime = moment(message.createAt).format('h:mm a')
@@ -62,7 +72,6 @@ $('#message-form').on('submit', function (e) {
     e.preventDefault();
 
     socket.emit('createMessage', {
-        from: 'User',
         text: messageTextbox.val()
     }, function () {
         messageTextbox.val('')
