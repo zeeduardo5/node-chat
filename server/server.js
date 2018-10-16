@@ -15,9 +15,6 @@ app.use(express.static(publicPath));
 
 io.on('connection', (socket) => {
     console.log('New user connected');
-
-    
-
     socket.on('join', (params, callBack) => {
         if (!isRealString(params.name) || !isRealString(params.room)){
             callBack('Name and Room are required.')
